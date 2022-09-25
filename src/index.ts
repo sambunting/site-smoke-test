@@ -1,5 +1,6 @@
 import playwright, { devices } from 'playwright';
 import getURLs from './urls';
+import Test from './test';
 
 interface IOptions {
   sitemapURL: string;
@@ -16,11 +17,12 @@ const options: IOptions = {
 
 (async () => {
   const urls = (await getURLs(options.sitemapURL))
-  const results = [];
+  const results: Test[] = [];
 
   console.log(`Found a total of ${urls.length} urls`)
 
   console.log('Starting testing environment...');
+
   // Setup playwright
   const browser = await playwright.chromium.launch();
   const context = await browser.newContext(devices['Desktop Chrome']);
@@ -30,33 +32,42 @@ const options: IOptions = {
     await page.route(`/${url}/g`, route => route.abort());
   }
 
-  let currentTest: any = { result: 'pass' };
+  // Initialise tests
+  const tests: Test[] = [];
+
+  urls.forEach((url) => {
+    tests.push(new Test({
+      url,
+    }))
+  })
+
+  let currentTest: Test | null = null;
 
   // Handler for if `console.error` is used
   await page.on('console', msg => {
-    if (msg.type() === 'error')
-      currentTest.result = 'fail';
-
-      console.log(`Error text: "${msg.text()}"`);
+    if (msg.type() === 'error') {
+      currentTest?.addError({
+        text: msg.text(),
+      })
+    }
   });
 
   // Handler for if there is an uncaught error
   await page.on('pageerror', msg => {
-    currentTest.result = 'fail'
-
-    console.log('uncaught error', msg.message)
+    currentTest?.addError({
+      text: msg.message,
+    })
   })
 
-  for (const url of urls) {
-    console.log('Testing page', url);
+  for (const test of tests) {
+    console.log('Testing page', test.url);
 
-    currentTest.url = url;
+    currentTest = test;
 
-    await page.goto(url);
+    await page.goto(test.url);
     await page.waitForLoadState('networkidle');
 
-    results.push({ ...currentTest });
-    currentTest = Object.assign({ result: 'pass' }, {});
+    results.push(currentTest);
   }
 
   console.log('Testing complete, beginning teardown...');
