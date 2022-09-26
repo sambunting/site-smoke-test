@@ -67,6 +67,8 @@ const options: IOptions = {
     await page.goto(test.url);
     await page.waitForLoadState('networkidle');
 
+    currentTest.complete();
+
     results.push(currentTest);
   }
 
@@ -76,6 +78,8 @@ const options: IOptions = {
   await browser.close();
 
   const overallPass = results.filter((x) => x.result === 'fail').length > 0 ? false : true;
+
+  console.log(results);
 
   if (overallPass) {
     console.log('All tests completed successfully!')
