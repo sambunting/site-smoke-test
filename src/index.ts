@@ -1,6 +1,6 @@
-import playwright, { devices } from 'playwright';
 import getURLs from './urls';
 import Test from './test';
+import Playwright from './playwright';
 
 interface Options {
   sitemapURL: string;
@@ -10,36 +10,19 @@ interface Options {
 class App {
   public sitemapURL: string;
   public results: Test[] = [];
+  private playright: Playwright = new Playwright();
+  private tests: Test[] = [];
+  private urls: string[] = [];
 
   constructor(options: Options) {
     this.sitemapURL = options.sitemapURL;
   }
 
-  public init = async () => {
-    const urls = (await getURLs(this.sitemapURL))
-
-    console.log(`Found a total of ${urls.length} urls`)
-
-    console.log('Starting testing environment...');
-
-    // Setup playwright
-    const browser = await playwright.chromium.launch();
-    const context = await browser.newContext(devices['Desktop Chrome']);
-    const page = await context.newPage();
-
-    // Initialise tests
-    const tests: Test[] = [];
-
-    urls.forEach((url) => {
-      tests.push(new Test({
-        url,
-      }))
-    })
-
+  run = async (tests: Test[]) => {
     let currentTest: Test | null = null;
 
     // Handler for if `console.error` is used
-    await page.on('console', msg => {
+    await this.playright.page!.on('console', msg => {
       if (msg.type() === 'error') {
         currentTest?.addError({
           text: msg.text(),
@@ -48,7 +31,7 @@ class App {
     });
 
     // Handler for if there is an uncaught error
-    await page.on('pageerror', msg => {
+    await this.playright.page!.on('pageerror', msg => {
       currentTest?.addError({
         text: msg.message,
       })
@@ -59,18 +42,36 @@ class App {
 
       currentTest = test;
 
-      await page.goto(test.url);
-      await page.waitForLoadState('networkidle');
+      await this.playright.goToPage(test.url);
 
       currentTest.complete();
 
       this.results.push(currentTest);
     }
+  }
 
+  private initTests = () => {
+    this.urls.forEach((url: string) => this.tests.push(new Test({ url })))
+  }
+
+  public init = async () => {
+    this.urls = (await getURLs(this.sitemapURL))
+
+    console.log(`Found a total of ${this.urls.length} urls`)
+    console.log('Starting testing environment...');
+
+    // Launch/initialise playwright
+    await this.playright.init();
+
+    // Initialise tests
+    this.initTests();
+
+    // Run the tests
+    await this.run(this.tests);
+
+    // Once all Tests have been ran - shutdown playwright
     console.log('Testing complete, beginning teardown...');
-
-    await context.close();
-    await browser.close();
+    await this.playright.shutdown();
 
     const overallPass = this.results.filter((x) => x.result === 'fail').length > 0 ? false : true;
 
