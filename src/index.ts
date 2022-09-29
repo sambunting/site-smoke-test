@@ -1,6 +1,7 @@
 import getURLs from './urls';
 import Test from './test';
 import Playwright from './playwright';
+import ConsoleReport from './report/Console';
 
 interface Options {
   sitemapURL: string;
@@ -72,16 +73,9 @@ class App {
     // Once all Tests have been ran - shutdown playwright
     console.log('Testing complete, beginning teardown...');
     await this.playright.shutdown();
-
-    const overallPass = this.results.filter((x) => x.result === 'fail').length > 0 ? false : true;
-
-    console.log(this.results);
-
-    if (overallPass) {
-      console.log('All tests completed successfully!')
-    } else {
-      console.log('FAIL');
-    }
+    
+    const report = new ConsoleReport(this.results);
+    report.execute();
   }
 }
 

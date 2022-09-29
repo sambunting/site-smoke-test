@@ -11,7 +11,7 @@ interface Error {
 class Test {
   public url: string;
   public result: TestResult = 'pass';
-  private errors: Error[] = [];
+  public errors: Error[] = [];
   public startTime: number = Date.now()
   public endTime: number | null = null;
   public duration: number | null = null;
