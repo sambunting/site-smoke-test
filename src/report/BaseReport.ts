@@ -1,4 +1,4 @@
-import Test from "../test";
+import Test from "../Test";
 
 class BaseReport {
   public name: string;

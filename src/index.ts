@@ -1,6 +1,6 @@
-import getURLs from './urls';
-import Test from './test';
-import Playwright from './playwright';
+import getURLs from './Urls';
+import Test from './Test';
+import Playwright from './Playwright';
 import ConsoleReport from './report/Console';
 
 interface Options {

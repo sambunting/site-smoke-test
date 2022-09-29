@@ -1,4 +1,4 @@
-import Test from "../test";
+import Test from "../Test";
 import BaseReport from "./BaseReport";
 
 class ConsoleReport extends BaseReport {
