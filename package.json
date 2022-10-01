@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "axios": "^0.27.2",
+    "chalk": "^5.0.1",
     "fast-xml-parser": "^4.0.10",
     "playwright": "^1.26.0",
     "yargs": "^17.5.1"
