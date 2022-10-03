@@ -1,5 +1,5 @@
-import Test from "../Test";
-import BaseReport from "./BaseReport";
+import Test from "../../Test";
+import BaseReport from "../BaseReport";
 import chalk from "chalk";
 
 class ConsoleReport extends BaseReport {
