@@ -6,8 +6,17 @@ import ReportFactory from './report/Factory';
 type Reporters = ('console')[]
 
 interface Options {
+  /**
+   * The URL to the website's sitemap.xml file
+   */
   sitemapURL: string;
+  /**
+   * Array of urls that would be aborted/blocked when the webpage makes a request to them 
+   */
   requestBlacklist?: string[]
+  /**
+   * Array of report formats
+   */
   reporters?: Reporters
 }
 
@@ -25,6 +34,11 @@ class App {
     this.reporters = options.reporters || ['console'];
   }
 
+  /**
+   * Goes through each of the tests, loads the page in Playwright, and report any errors that appear
+   *
+   * @param tests Array of empty/new tests
+   */
   run = async (tests: Test[]) => {
     let currentTest: Test | null = null;
 
@@ -57,10 +71,17 @@ class App {
     }
   }
 
+  /**
+   * Initialise test - take each of the URLs and convert them to the test class
+   */
   private initTests = () => {
     this.urls.forEach((url: string) => this.tests.push(new Test({ url })))
   }
 
+  /**
+   * Initialise the tool, get the URLs from the sitemap file, launch Playwright, run all of the
+   * tests, shutdown playwright and then run the reports
+   */
   public init = async () => {
     this.urls = (await getURLs(this.sitemapURL))
 

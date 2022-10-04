@@ -1,10 +1,34 @@
 import Test from "../Test";
 
+/**
+ * Base report class that initialises all reporters 
+ */
 class BaseReport {
+  /**
+   * The name of the reporter
+   */
   public name: string;
+  /**
+   * Test data used to generate the reporter
+   */
   protected data: Test[];
+  /**
+   * Bool on if all tests has passed or not
+   */
   public overallPass: boolean;
-  public counts: { pass: number, fail: number };
+  /**
+   * Totals generated from tests
+   */
+  public counts: { 
+    /**
+     * The number of tests that have passed
+     */
+    pass: number,
+    /**
+     * The number of tests that have failed
+     */
+    fail: number
+  };
 
   constructor(name: string, data: Test[]) {
     this.name = name;
