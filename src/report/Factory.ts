@@ -1,8 +1,10 @@
 import Test from "../Test";
 import ConsoleReport from "./reporters/Console";
+import JUnitReport from "./reporters/JUnit";
 
 const reporters: {[ key: string]: any } = {
   'console': ConsoleReport,
+  'junit': JUnitReport,
 }
 
 export const ReporterList = Object.keys(reporters);

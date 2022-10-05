@@ -1,9 +1,12 @@
+import { XMLBuilder } from 'fast-xml-parser';
+import fs from 'fs';
+
 import Test from "../Test";
 
 /**
  * Base report class that initialises all reporters 
  */
-class BaseReport {
+abstract class BaseReport implements IBaseReport {
   /**
    * The name of the reporter
    */
@@ -41,6 +44,28 @@ class BaseReport {
 
     this.overallPass = this.counts.fail === 0;
   }
+
+  /**
+   * Write an object to an XML file.
+   * 
+   * For attributes, prepend '@@' to properties
+   * For the inner-text content, use '#text' as the property
+   *
+   * @param data Javascript object to convert to an XML file
+   * @param filePath The path and name of the file to export the content to.
+   */
+  toXMLFile(data: any, filePath: any) {
+    const builder = new XMLBuilder({ ignoreAttributes: false, format: true, attributeNamePrefix: '@@' });
+    let XMLData = builder.build(data);
+
+    fs.writeFileSync(filePath, XMLData);
+    // console.log(sampleXMLData);
+  }
+
+  /**
+   * Method that is called to generate the report
+   */
+  abstract execute(): void;
 }
 
 export default BaseReport;

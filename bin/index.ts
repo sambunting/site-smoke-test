@@ -13,7 +13,7 @@ const args: any = yargs(hideBin(process.argv))
       description: 'The url to the sitemap of the website',
       demandOption: true,
     })
-    .option('reporter', {
+    .option('reporters', {
       description: 'Array of reporters to generate the results from',
       type: 'array',
       default: ['console'],
