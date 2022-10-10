@@ -17,7 +17,11 @@ interface Options {
   /**
    * Array of report formats
    */
-  reporters?: Reporters
+  reporters?: Reporters,
+  /**
+   * Set to true if nothing should be outputted to the console, useful for unit-testing.
+   */
+  silent: boolean,
 }
 
 class App {
@@ -27,9 +31,11 @@ class App {
   private tests: Test[] = [];
   private urls: string[] = [];
   private reporters: Reporters = [];
+  private silent: boolean = false;
 
   constructor(options: Options) {
     this.sitemapURL = options.sitemapURL;
+    this.silent = options.silent;
 
     this.reporters = options.reporters || ['console'];
   }
@@ -59,7 +65,7 @@ class App {
     })
 
     for (const test of tests) {
-      console.log('Testing page', test.url);
+      !this.silent && console.log('Testing page', test.url);
 
       currentTest = test;
 
@@ -85,8 +91,8 @@ class App {
   public init = async () => {
     this.urls = (await getURLs(this.sitemapURL))
 
-    console.log(`Found a total of ${this.urls.length} urls`)
-    console.log('Starting testing environment...');
+    !this.silent && console.log(`Found a total of ${this.urls.length} urls`)
+    !this.silent && console.log('Starting testing environment...');
 
     // Launch/initialise playwright
     await this.playright.init();
@@ -98,7 +104,7 @@ class App {
     await this.run(this.tests);
 
     // Once all Tests have been ran - shutdown playwright
-    console.log('Testing complete, beginning teardown...');
+    !this.silent && console.log('Testing complete, beginning teardown...');
     await this.playright.shutdown();
 
     this.reporters.forEach((reporter) => {

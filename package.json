@@ -8,7 +8,8 @@
     "site-smoke-test": "dist/index.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest",
+    "coverage": "npm run test -- --coverage",
     "build": "tsc --noEmit && node build.js"
   },
   "keywords": [],
@@ -17,8 +18,10 @@
   "devDependencies": {
     "@types/node": "^18.7.23",
     "@types/yargs": "^17.0.13",
+    "@vitest/coverage-c8": "^0.24.1",
     "esbuild": "^0.15.9",
-    "typescript": "^4.8.3"
+    "typescript": "^4.8.3",
+    "vitest": "^0.24.1"
   },
   "dependencies": {
     "axios": "^0.27.2",
