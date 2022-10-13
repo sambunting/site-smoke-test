@@ -3,31 +3,9 @@ import getURLs from './Urls';
 import Test from './Test';
 import Playwright from './Playwright';
 import ReportFactory from './report/Factory';
-
-type Reporters = ('console')[];
-
-interface Options {
-  /**
-   * The URL to the website's sitemap.xml file
-   */
-  sitemapURL: string;
-  /**
-   * Array of urls that would be aborted/blocked when the webpage makes a request to them
-   */
-  requestBlacklist?: string[]
-  /**
-   * Array of report formats
-   */
-  reporters?: Reporters,
-  /**
-   * Set to true if nothing should be outputted to the console, useful for unit-testing.
-   */
-  silent: boolean,
-}
+import Config from './Config';
 
 class App {
-  public sitemapURL: string;
-
   public results: Test[] = [];
 
   private playright: Playwright = new Playwright();
@@ -36,15 +14,10 @@ class App {
 
   private urls: string[] = [];
 
-  private reporters: Reporters = [];
+  public config: Config;
 
-  private silent: boolean = false;
-
-  constructor(options: Options) {
-    this.sitemapURL = options.sitemapURL;
-    this.silent = options.silent;
-
-    this.reporters = options.reporters || ['console'];
+  constructor(options: Config) {
+    this.config = new Config(options);
   }
 
   /**
@@ -73,7 +46,7 @@ class App {
 
     // eslint-disable-next-line no-restricted-syntax
     for (const test of tests) {
-      if (!this.silent) console.log('Testing page', test.url);
+      if (!this.config.silent) console.log('Testing page', test.url);
 
       currentTest = test;
 
@@ -98,10 +71,10 @@ class App {
    * tests, shutdown playwright and then run the reports
    */
   public init = async () => {
-    this.urls = (await getURLs(this.sitemapURL));
+    this.urls = (await getURLs(this.config.sitemapURL));
 
-    if (!this.silent) console.log(`Found a total of ${this.urls.length} urls`);
-    if (!this.silent) console.log('Starting testing environment...');
+    if (!this.config.silent) console.log(`Found a total of ${this.urls.length} urls`);
+    if (!this.config.silent) console.log('Starting testing environment...');
 
     // Launch/initialise playwright
     await this.playright.init();
@@ -113,10 +86,10 @@ class App {
     await this.run(this.tests);
 
     // Once all Tests have been ran - shutdown playwright
-    if (!this.silent) console.log('Testing complete, beginning teardown...');
+    if (!this.config.silent) console.log('Testing complete, beginning teardown...');
     await this.playright.shutdown();
 
-    this.reporters.forEach((reporter) => {
+    this.config.reporters.forEach((reporter) => {
       const report = ReportFactory(reporter, this.results);
       report.execute();
     });
