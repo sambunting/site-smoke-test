@@ -1,28 +1,32 @@
 import { XMLBuilder } from 'fast-xml-parser';
 import fs from 'fs';
 
-import Test from "../Test";
+import Test from '../Test';
+import IBaseReport from './IBaseReport';
 
 /**
- * Base report class that initialises all reporters 
+ * Base report class that initialises all reporters
  */
 abstract class BaseReport implements IBaseReport {
   /**
    * The name of the reporter
    */
   public name: string;
+
   /**
    * Test data used to generate the reporter
    */
   protected data: Test[];
+
   /**
    * Bool on if all tests has passed or not
    */
   public overallPass: boolean;
+
   /**
    * Totals generated from tests
    */
-  public counts: { 
+  public counts: {
     /**
      * The number of tests that have passed
      */
@@ -47,16 +51,17 @@ abstract class BaseReport implements IBaseReport {
 
   /**
    * Write an object to an XML file.
-   * 
+   *
    * For attributes, prepend '@@' to properties
    * For the inner-text content, use '#text' as the property
    *
    * @param data Javascript object to convert to an XML file
    * @param filePath The path and name of the file to export the content to.
    */
+  // eslint-disable-next-line class-methods-use-this
   toXMLFile(data: any, filePath: any) {
     const builder = new XMLBuilder({ ignoreAttributes: false, format: true, attributeNamePrefix: '@@' });
-    let XMLData = builder.build(data);
+    const XMLData = builder.build(data);
 
     fs.writeFileSync(filePath, XMLData);
     // console.log(sampleXMLData);

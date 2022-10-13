@@ -1,9 +1,10 @@
+/* eslint-disable no-console */
 import getURLs from './Urls';
 import Test from './Test';
 import Playwright from './Playwright';
 import ReportFactory from './report/Factory';
 
-type Reporters = ('console')[]
+type Reporters = ('console')[];
 
 interface Options {
   /**
@@ -11,7 +12,7 @@ interface Options {
    */
   sitemapURL: string;
   /**
-   * Array of urls that would be aborted/blocked when the webpage makes a request to them 
+   * Array of urls that would be aborted/blocked when the webpage makes a request to them
    */
   requestBlacklist?: string[]
   /**
@@ -26,11 +27,17 @@ interface Options {
 
 class App {
   public sitemapURL: string;
+
   public results: Test[] = [];
+
   private playright: Playwright = new Playwright();
+
   private tests: Test[] = [];
+
   private urls: string[] = [];
+
   private reporters: Reporters = [];
+
   private silent: boolean = false;
 
   constructor(options: Options) {
@@ -49,50 +56,52 @@ class App {
     let currentTest: Test | null = null;
 
     // Handler for if `console.error` is used
-    await this.playright.page!.on('console', msg => {
+    await this.playright.page!.on('console', (msg) => {
       if (msg.type() === 'error') {
         currentTest?.addError({
           text: msg.text(),
-        })
+        });
       }
     });
 
     // Handler for if there is an uncaught error
-    await this.playright.page!.on('pageerror', msg => {
+    await this.playright.page!.on('pageerror', (msg) => {
       currentTest?.addError({
         text: msg.message,
-      })
-    })
+      });
+    });
 
+    // eslint-disable-next-line no-restricted-syntax
     for (const test of tests) {
-      !this.silent && console.log('Testing page', test.url);
+      if (!this.silent) console.log('Testing page', test.url);
 
       currentTest = test;
 
+      // eslint-disable-next-line no-await-in-loop
       await this.playright.goToPage(test.url);
 
       currentTest.complete();
 
       this.results.push(currentTest);
     }
-  }
+  };
 
   /**
    * Initialise test - take each of the URLs and convert them to the test class
    */
   private initTests = () => {
-    this.urls.forEach((url: string) => this.tests.push(new Test({ url })))
-  }
+    this.urls.forEach((url: string) => this.tests.push(new Test({ url })));
+  };
 
   /**
    * Initialise the tool, get the URLs from the sitemap file, launch Playwright, run all of the
    * tests, shutdown playwright and then run the reports
    */
   public init = async () => {
-    this.urls = (await getURLs(this.sitemapURL))
+    this.urls = (await getURLs(this.sitemapURL));
 
-    !this.silent && console.log(`Found a total of ${this.urls.length} urls`)
-    !this.silent && console.log('Starting testing environment...');
+    if (!this.silent) console.log(`Found a total of ${this.urls.length} urls`);
+    if (!this.silent) console.log('Starting testing environment...');
 
     // Launch/initialise playwright
     await this.playright.init();
@@ -104,14 +113,14 @@ class App {
     await this.run(this.tests);
 
     // Once all Tests have been ran - shutdown playwright
-    !this.silent && console.log('Testing complete, beginning teardown...');
+    if (!this.silent) console.log('Testing complete, beginning teardown...');
     await this.playright.shutdown();
 
     this.reporters.forEach((reporter) => {
       const report = ReportFactory(reporter, this.results);
       report.execute();
-    })
-  }
+    });
+  };
 }
 
 export default App;

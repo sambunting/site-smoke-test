@@ -4,3 +4,5 @@ interface IBaseReport {
    */
   execute: () => void
 }
+
+export default IBaseReport;

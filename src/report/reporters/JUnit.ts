@@ -1,11 +1,11 @@
-import Test from "../../Test";
-import BaseReport from "../BaseReport";
+import Test from '../../Test';
+import BaseReport from '../BaseReport';
 
 class JUnitReport extends BaseReport {
   constructor(data: Test[]) {
-    super('junit', data)
+    super('junit', data);
   }
-  
+
   execute(): void {
     this.generate();
   }
@@ -19,29 +19,30 @@ class JUnitReport extends BaseReport {
         '@@name': 'Site Smoke Test',
         '@@tests': this.data.length,
         '@@failures': this.counts.fail,
-        testcase: []
-      }
-    }
+        testcase: [],
+      },
+    };
 
     this.data.forEach((test) => {
       const testObject: any = {
         '@@name': test.url,
-        '@@classname': test.url
+        '@@classname': test.url,
       };
 
       if (test.errors.length > 0) {
         testObject.error = {
           '@@message': test.errors[0].text,
-          '#text': test.errors[0].text
-        }
+          '#text': test.errors[0].text,
+        };
       }
 
       returnValue.testsuite.testcase.push(testObject);
-    })
+    });
 
+    // eslint-disable-next-line no-console
     console.log('Writing JUnit report to test-results.xml');
 
-    this.toXMLFile(returnValue, process.cwd() + '/test-results.xml');
+    this.toXMLFile(returnValue, `${process.cwd()}/test-results.xml`);
   }
 }
 

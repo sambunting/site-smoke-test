@@ -10,18 +10,18 @@ import { XMLParser } from 'fast-xml-parser';
 const parseXMLString = (string: string) => {
   const parser = new XMLParser();
   return parser.parse(string);
-}
+};
 
 /**
  * Get the contents of a website's sitemap
  *
  * @param url Sitemap URL
- * @returns 
+ * @returns
  */
 const getSitemapFile = async (url: string) => {
   const data = await axios(url);
   return parseXMLString(data.data);
-}
+};
 
 /**
  * Get a list of URLS retrieved from a sitemap
@@ -43,7 +43,6 @@ const getURLs = async (sitemapURL: string) => {
   });
 
   return returnValue;
-}
+};
 
 export default getURLs;
-
