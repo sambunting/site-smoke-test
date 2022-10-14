@@ -89,8 +89,7 @@ jobs:
 
       - name: Versions
         run: |
-          npx eslint --v
-          npx tsc --v
+          npm list
 
       # Run linting
       - name: Run ESLint
