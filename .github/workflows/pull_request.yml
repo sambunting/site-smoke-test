@@ -89,7 +89,7 @@ jobs:
 
       - name: Versions
         run: |
-          ls
+          ls -a
 
       # Run linting
       - name: Run ESLint
