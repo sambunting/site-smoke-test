@@ -33,15 +33,15 @@ jobs:
     needs: dependencies
     runs-on: ubuntu-latest
     steps:
+      # Checkout the Repo
+      - uses: actions/checkout@v3
+
       # Get node_modules from the cache
       - name: Load Cache
         uses: actions/cache@v2
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-$GITHUB_RUN_ID
-
-      # Checkout the Repo
-      - uses: actions/checkout@v3
 
       # Run unit tests
       - name: Run Unit Tests
