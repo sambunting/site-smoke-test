@@ -20,9 +20,6 @@ jobs:
       - name: Install Package Dependencies
         run: npm install
 
-      - name: Install Playwright
-        run: npx playwright install
-
       # Cache node modules
       - name: Cache node_modules
         uses: actions/cache@v2
@@ -45,6 +42,9 @@ jobs:
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-$GITHUB_RUN_ID
+
+      - name: Install Playwright
+        run: npx playwright install
 
       # Run unit tests
       - name: Run Unit Tests
