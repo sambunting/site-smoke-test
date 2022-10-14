@@ -11,7 +11,7 @@
     "test": "vitest",
     "coverage": "npm run test -- --coverage",
     "build": "tsc --noEmit && node build.js",
-    "lint": "eslint src bin --ext .js,.ts -c .eslintrc.cjs"
+    "lint": "eslint src bin --ext .js,.ts -c .eslintrc.cjs --env-info --debug"
   },
   "keywords": [],
   "author": "",
