@@ -25,17 +25,21 @@ jobs:
         uses: actions/cache@v2
         id: npm-cache
         with:
-          path: |
-            **/node_modules
-          key: ${{ runner.os }}-npm-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-npm-
+          path: "/node_modules"
+          key: ${{ runner.os }}-$GITHUB_RUN_ID
 
   unit_tests:
     name: Unit Tests
     needs: dependencies
     runs-on: ubuntu-latest
     steps:
+      # Get node_modules from the cache
+      - name: Load Cache
+        uses: actions/cache@v2
+        with:
+          path: "/node_modules"
+          key: ${{ runner.os }}-$GITHUB_RUN_ID
+
       # Run unit tests
       - name: Run Unit Tests
         run: npm test
