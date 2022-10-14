@@ -49,3 +49,44 @@ jobs:
       # Run unit tests
       - name: Run Unit Tests
         run: npm test
+
+  code_coverage:
+    name: Code Coverage
+    needs: dependencies
+    runs-on: windows-latest
+    steps:
+      # Checkout the Repo
+      - uses: actions/checkout@v3
+
+      # Get node_modules from the cache
+      - name: Load Cache
+        uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-$GITHUB_RUN_ID
+
+      - name: Install Playwright
+        run: npx playwright install
+
+      # Run code coverage
+      - name: Run Code Coverage
+        run: npm run coverage
+
+  linting:
+    name: Code Coverage
+    needs: dependencies
+    runs-on: windows-latest
+    steps:
+      # Checkout the Repo
+      - uses: actions/checkout@v3
+
+      # Get node_modules from the cache
+      - name: Load Cache
+        uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-$GITHUB_RUN_ID
+
+      # Run linting
+      - name: Run ESLint
+        run: npm run lint
