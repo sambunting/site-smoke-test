@@ -20,6 +20,17 @@ jobs:
       - name: Install Package Dependencies
         run: npm install
 
+      # Cache node modules
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        id: npm-cache
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-npm-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
   unit_tests:
     name: Unit Tests
     needs: dependencies
