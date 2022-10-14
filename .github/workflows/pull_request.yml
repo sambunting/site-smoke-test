@@ -89,7 +89,7 @@ jobs:
 
       - name: Versions
         run: |
-          npm list
+          ls
 
       # Run linting
       - name: Run ESLint
