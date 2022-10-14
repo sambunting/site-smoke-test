@@ -4,7 +4,7 @@ on: pull_request
 jobs:
   dependencies:
     name: Install Dependencies
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       # Checkout the Repo
       - uses: actions/checkout@v3
