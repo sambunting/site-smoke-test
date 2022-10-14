@@ -80,17 +80,17 @@ jobs:
       # Checkout the Repo
       - uses: actions/checkout@v3
 
-      - name: Versions
-        run: |
-          eslint --v
-          tsc --v
-
       # Get node_modules from the cache
       - name: Load Cache
         uses: actions/cache@v2
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-$GITHUB_RUN_ID
+
+      - name: Versions
+        run: |
+          eslint --v
+          tsc --v
 
       # Run linting
       - name: Run ESLint
