@@ -5,14 +5,21 @@ module.exports = {
   },
   extends: [
     'airbnb-base',
-    'airbnb-typescript/base',
   ],
   overrides: [
+    {
+      files: ['*.ts'],
+      extends: [
+        'airbnb-typescript/base',
+      ],
+      parserOptions: {
+        project: './tsconfig.json',
+      },
+    },
   ],
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
-    project: './tsconfig.json'
   },
   rules: {
   },
