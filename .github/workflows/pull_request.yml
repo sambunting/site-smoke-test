@@ -40,6 +40,9 @@ jobs:
           path: "**/node_modules"
           key: ${{ runner.os }}-$GITHUB_RUN_ID
 
+      # Checkout the Repo
+      - uses: actions/checkout@v3
+
       # Run unit tests
       - name: Run Unit Tests
         run: npm test
