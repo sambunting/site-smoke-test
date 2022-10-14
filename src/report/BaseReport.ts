@@ -58,7 +58,6 @@ abstract class BaseReport implements IBaseReport {
    * @param data Javascript object to convert to an XML file
    * @param filePath The path and name of the file to export the content to.
    */
-  // eslint-disable-next-line class-methods-use-this
   toXMLFile(data: any, filePath: any) {
     const builder = new XMLBuilder({ ignoreAttributes: false, format: true, attributeNamePrefix: '@@' });
     const XMLData = builder.build(data);
