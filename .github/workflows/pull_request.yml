@@ -20,6 +20,9 @@ jobs:
       - name: Install Package Dependencies
         run: npm install
 
+      - name: Install Playwright
+        run: npx playwright install
+
       # Cache node modules
       - name: Cache node_modules
         uses: actions/cache@v2
