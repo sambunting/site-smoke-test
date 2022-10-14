@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import getURLs from './Urls.ts';
+import getURLs from './Urls';
 import Test from './Test';
 import Playwright from './Playwright';
 import ReportFactory from './report/Factory';
