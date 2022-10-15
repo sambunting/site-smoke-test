@@ -87,10 +87,6 @@ jobs:
           path: "**/node_modules"
           key: ${{ runner.os }}-$GITHUB_RUN_ID
 
-      - name: Versions
-        run: |
-          ls -a
-
       # Run linting
       - name: Run ESLint
         run: npm run lint
