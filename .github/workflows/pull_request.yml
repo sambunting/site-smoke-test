@@ -45,6 +45,11 @@ jobs:
 
       - name: Install Playwright
         run: npx playwright install
+      
+      - name: Test
+        run: |
+          ls -a
+          ls src -a
 
       # Run unit tests
       - name: Run Unit Tests
