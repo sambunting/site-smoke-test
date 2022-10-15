@@ -25,12 +25,19 @@ jobs:
         run: npx playwright install
 
       # Cache node modules and Playwright
-      - name: Cache Dependencies
+      - name: Cache node_modules
         uses: actions/cache@v2
         id: npm-cache
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-$GITHUB_RUN_ID
+
+      - name: Cache playwright
+        uses: actions/cache@v2
+        id: playwright-cache
+        with:
+          path: "/home/runner/.cache/ms-playwright/**"
+          key: ${{ runner.os }}-$GITHUB_RUN_ID-playwright
 
   unit_tests:
     name: Unit Tests
