@@ -20,12 +20,18 @@ jobs:
       - name: Install Package Dependencies
         run: npm install
 
-      # Cache node modules
-      - name: Cache node_modules
+      # Install Playwright
+      - name: Install Playwright
+        run: npx playwright install
+
+      # Cache node modules and Playwright
+      - name: Cache Dependencies
         uses: actions/cache@v2
         id: npm-cache
         with:
-          path: "**/node_modules"
+          path: |
+            "**/node_modules"
+            "/home/runner/.cache/ms-playwright/**"
           key: ${{ runner.os }}-$GITHUB_RUN_ID
 
   unit_tests:
@@ -40,16 +46,10 @@ jobs:
       - name: Load Cache
         uses: actions/cache@v2
         with:
-          path: "**/node_modules"
+          path: |
+            "**/node_modules"
+            "/home/runner/.cache/ms-playwright/**"
           key: ${{ runner.os }}-$GITHUB_RUN_ID
-
-      - name: Install Playwright
-        run: npx playwright install
-      
-      - name: Test
-        run: |
-          ls -a
-          ls src -a
 
       # Run unit tests
       - name: Run Unit Tests
@@ -67,11 +67,11 @@ jobs:
       - name: Load Cache
         uses: actions/cache@v2
         with:
-          path: "**/node_modules"
+          path: |
+            "**/node_modules"
+            "/home/runner/.cache/ms-playwright/**"
           key: ${{ runner.os }}-$GITHUB_RUN_ID
 
-      - name: Install Playwright
-        run: npx playwright install
 
       # Run code coverage
       - name: Run Code Coverage
@@ -89,7 +89,9 @@ jobs:
       - name: Load Cache
         uses: actions/cache@v2
         with:
-          path: "**/node_modules"
+          path: |
+            "**/node_modules"
+            "/home/runner/.cache/ms-playwright/**"
           key: ${{ runner.os }}-$GITHUB_RUN_ID
 
       # Run linting
