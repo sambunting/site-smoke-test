@@ -1,0 +1,100 @@
+# TODO - Figure out a way to cache Playwright in the dependencies job and load them if required in the other jobs.
+
+name: Pull Request Review
+on: pull_request
+
+jobs:
+  dependencies:
+    name: Install Dependencies
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the Repo
+      - uses: actions/checkout@v3
+
+      # Install Node 16
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'npm'
+
+      # Install NPM Package Dependencies
+      - name: Install Package Dependencies
+        run: npm install
+
+      # Install Playwright
+      - name: Install Playwright
+        run: npx playwright install
+
+      # Cache node modules and Playwright
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        id: npm-cache
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-$GITHUB_RUN_ID
+
+  unit_tests:
+    name: Unit Tests
+    needs: dependencies
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the Repo
+      - uses: actions/checkout@v3
+
+      # Get node_modules from the cache
+      - name: Load Cache
+        uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-$GITHUB_RUN_ID
+
+      # Install Playwright
+      - name: Install Playwright
+        run: npx playwright install
+
+      # Run unit tests
+      - name: Run Unit Tests
+        run: npm test
+
+  code_coverage:
+    name: Code Coverage
+    needs: dependencies
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the Repo
+      - uses: actions/checkout@v3
+
+      # Get node_modules from the cache
+      - name: Load Cache
+        uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-$GITHUB_RUN_ID
+
+      # Install Playwright
+      - name: Install Playwright
+        run: npx playwright install
+
+      # Run code coverage
+      - name: Run Code Coverage
+        run: npm run coverage
+
+  linting:
+    name: Linting
+    needs: dependencies
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the Repo
+      - uses: actions/checkout@v3
+
+      # Get node_modules from the cache
+      - name: Load Cache
+        uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-$GITHUB_RUN_ID
+
+      # Run linting
+      - name: Run ESLint
+        run: npm run lint
