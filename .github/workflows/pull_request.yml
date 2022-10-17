@@ -1,3 +1,5 @@
+# TODO - Figure out a way to cache Playwright in the dependencies job and load them if required in the other jobs.
+
 name: Pull Request Review
 on: pull_request
 
