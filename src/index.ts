@@ -8,7 +8,7 @@ import Config from './Config';
 class App {
   public results: Test[] = [];
 
-  private playright: Playwright = new Playwright();
+  private playwright: Playwright = new Playwright();
 
   private tests: Test[] = [];
 
@@ -28,21 +28,23 @@ class App {
   run = async (tests: Test[]) => {
     let currentTest: Test | null = null;
 
-    // Handler for if `console.error` is used
-    await this.playright.page!.on('console', (msg) => {
-      if (msg.type() === 'error') {
-        currentTest?.addError({
-          text: msg.text(),
-        });
-      }
-    });
-
-    // Handler for if there is an uncaught error
-    await this.playright.page!.on('pageerror', (msg) => {
-      currentTest?.addError({
-        text: msg.message,
+    if (this.playwright && this.playwright.page) {
+      // Handler for if `console.error` is used
+      await this.playwright.page.on('console', (msg) => {
+        if (msg.type() === 'error') {
+          currentTest?.addError({
+            text: msg.text(),
+          });
+        }
       });
-    });
+
+      // Handler for if there is an uncaught error
+      await this.playwright.page.on('pageerror', (msg) => {
+        currentTest?.addError({
+          text: msg.message,
+        });
+      });
+    }
 
     // eslint-disable-next-line no-restricted-syntax
     for (const test of tests) {
@@ -51,7 +53,7 @@ class App {
       currentTest = test;
 
       // eslint-disable-next-line no-await-in-loop
-      await this.playright.goToPage(test.url);
+      await this.playwright.goToPage(test.url);
 
       currentTest.complete();
 
@@ -77,7 +79,7 @@ class App {
     if (!this.config.silent) console.log('Starting testing environment...');
 
     // Launch/initialise playwright
-    await this.playright.init();
+    await this.playwright.init();
 
     // Initialise tests
     this.initTests();
@@ -87,7 +89,7 @@ class App {
 
     // Once all Tests have been ran - shutdown playwright
     if (!this.config.silent) console.log('Testing complete, beginning teardown...');
-    await this.playright.shutdown();
+    await this.playwright.shutdown();
 
     this.config.reporters.forEach((reporter) => {
       const report = ReportFactory(reporter, this.results);

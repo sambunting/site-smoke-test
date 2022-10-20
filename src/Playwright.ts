@@ -25,16 +25,20 @@ class Playwright {
    * @param url The url to navigate to
    */
   goToPage = async (url: string) => {
-    await this.page!.goto(url);
-    await this.page!.waitForLoadState('networkidle');
+    if (this.page) {
+      await this.page.goto(url);
+      await this.page.waitForLoadState('networkidle');
+    } else {
+      throw new Error('Playwright has not been initialised by site-smoke-test.');
+    }
   };
 
   /**
    * Shutdown Playwright
    */
   shutdown = async () => {
-    await this.context!.close();
-    await this.browser!.close();
+    if (this.context) await this.context.close();
+    if (this.browser) await this.browser.close();
   };
 }
 
