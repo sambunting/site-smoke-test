@@ -1,8 +1,14 @@
+type Reporters = ('console' | 'junit')[];
+
 interface RequiredOptions {
   sitemapURL: string;
 }
 
-type Reporters = ('console' | 'junit')[];
+interface Options {
+  reporters: Reporters;
+}
+
+type AllOptions = RequiredOptions & Partial<Options>;
 
 class Config {
   /**
@@ -13,15 +19,16 @@ class Config {
   /**
    * Array of report formats
    */
-  public reporters: Reporters = ['console'];
+  public reporters: Reporters;
 
   /**
    * Set to true if nothing should be outputted to the console, useful for unit-testing.
    */
-  public silent: boolean = false;
+  public silent = false;
 
-  constructor(options: RequiredOptions) {
+  constructor(options: AllOptions) {
     this.sitemapURL = options.sitemapURL;
+    this.reporters = options.reporters || ['console'];
   }
 }
 
