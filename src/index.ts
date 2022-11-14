@@ -3,7 +3,7 @@ import getURLs from './Urls';
 import Test from './Test';
 import Playwright from './Playwright';
 import ReportFactory from './report/Factory';
-import Config from './Config';
+import Config, { AppOptions } from './Config';
 
 class App {
   public results: Test[] = [];
@@ -16,7 +16,7 @@ class App {
 
   public config: Config;
 
-  constructor(options: Config) {
+  constructor(options: AppOptions) {
     this.config = new Config(options);
   }
 
@@ -48,6 +48,8 @@ class App {
 
     // eslint-disable-next-line no-restricted-syntax
     for (const test of tests) {
+      this.config.beforePage(test);
+
       if (!this.config.silent) console.log('Testing page', test.url);
 
       currentTest = test;
@@ -56,6 +58,8 @@ class App {
       await this.playwright.goToPage(test.url);
 
       currentTest.complete();
+
+      this.config.afterPage(test);
 
       this.results.push(currentTest);
     }
@@ -84,8 +88,12 @@ class App {
     // Initialise tests
     this.initTests();
 
+    this.config.beforeAll(this.tests);
+
     // Run the tests
     await this.run(this.tests);
+
+    this.config.afterAll(this.tests);
 
     // Once all Tests have been ran - shutdown playwright
     if (!this.config.silent) console.log('Testing complete, beginning teardown...');
