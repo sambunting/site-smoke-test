@@ -12,6 +12,10 @@ interface Options {
    */
   reporters: Reporters;
   /**
+   * Boolean to disable writing to the console. Useful for unit testing.
+   */
+  silent: boolean;
+  /**
    * Method called before all tests are run.
    */
   beforeAll: (tests: Test[]) => void;
@@ -58,6 +62,8 @@ class Config {
     this.raw = options;
 
     this.sitemapURL = options.sitemapURL;
+
+    this.silent = options.silent || false;
     this.reporters = options.reporters || ['console'];
   }
 
