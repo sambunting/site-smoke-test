@@ -6,5 +6,5 @@ build({
   platform: 'node',
   format: 'esm',
   outdir: 'dist',
-  external: ['axios', 'playwright']
+  external: ['axios', 'playwright', 'cosmiconfig']
 })
