@@ -50,13 +50,27 @@ class Test {
   }
 
   /**
+   * Fail the test
+   */
+  fail() {
+    this.result = 'fail';
+  }
+
+  /**
+   * Pass the test
+   */
+  pass() {
+    this.result = 'pass';
+  }
+
+  /**
    * Add an error to the test
    *
    * @param error Error to add
    */
   addError = (error: Error) => {
     // If there are any errors, the test would be a failure
-    this.result = 'fail';
+    this.fail();
 
     this.errors.push(error);
   };

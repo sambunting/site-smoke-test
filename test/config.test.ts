@@ -56,6 +56,30 @@ describe('Config', () => {
 
         expect(defaultConfig.afterPage).toBeCalledTimes(totalURLCount);
       });
+
+      it('should be able to set a test to pass', async () => {
+        const actual = new App({
+          ...defaultConfig,
+          afterPage: (test) => {
+            test.pass();
+          },
+        });
+        await actual.init();
+
+        expect(actual.results.filter((x) => x.result)).not.toContain('fail');
+      });
+
+      it('should be able to set a test to fail', async () => {
+        const actual = new App({
+          ...defaultConfig,
+          afterPage: (test) => {
+            test.fail();
+          },
+        });
+        await actual.init();
+
+        expect(actual.results.filter((x) => x.result)).not.toContain('pass');
+      });
     });
   });
 });

@@ -62,11 +62,27 @@ The `beforeAll` hook is called before all of the tests are ran.
 ##### afterAll(tests: Tests[])
 The `afterAll` hook is called after all of the tests are ran.
 
-##### beforePage(tests: Tests[])
+##### beforePage(tests: Test)
 The `beforePage` hook is called before a test is ran.
 
-##### afterPage(tests: Tests[])
+##### afterPage(tests: Test)
 The `afterPage` hook is called after a test is ran.
+
+You can also do things like modify the result of the test if required.
+```js
+module.exports = {
+  // ...
+  afterPage: (test) => {
+    // Here you might want to add some logic that would make the test pass or fail, such as if the test is on a specific path.
+
+    // Force all of the tests to pass
+    test.pass();
+
+    // Alternatively - you can force all of the tests to fail.
+    test.fail();
+  }
+}
+```
 
 ## Development
 
