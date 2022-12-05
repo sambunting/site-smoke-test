@@ -103,6 +103,16 @@ class App {
       const report = ReportFactory(reporter, this.results);
       report.execute();
     });
+
+    // If any of the tests have failed, exit the tool with the 1 exit code, this is so it can be
+    // caught by CI processes
+    if (this.tests.filter((x) => x.result === 'fail').length !== 0) {
+      // We don't want the unit tests to exit via code 1, so only do it if we're not in a testing
+      // environment
+      if (!process.env.TEST) {
+        process.exit(1);
+      }
+    }
   };
 }
 
