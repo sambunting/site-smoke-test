@@ -27,7 +27,7 @@ class Playwright {
   goToPage = async (url: string) => {
     if (this.page) {
       await this.page.goto(url);
-      await this.page.waitForLoadState('networkidle');
+      await this.page.waitForLoadState('load');
     } else {
       throw new Error('Playwright has not been initialised by site-smoke-test.');
     }
