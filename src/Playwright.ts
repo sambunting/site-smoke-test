@@ -1,5 +1,9 @@
 import playwright, { devices } from 'playwright';
 
+type PlaywrightBrowsers = 'chromium' | 'firefox';
+
+type PlaywrightDevices = keyof typeof devices;
+
 /**
  * Class to manage the Playwright instance
  */
@@ -13,9 +17,11 @@ class Playwright {
   /**
    * Initialise Playwright launch Chrome, apply desktop context and launch a new page
    */
-  init = async () => {
-    this.browser = await playwright.chromium.launch();
-    this.context = await this.browser.newContext(devices['Desktop Chrome']);
+  init = async (
+    { browser, device } : { browser: PlaywrightBrowsers, device: PlaywrightDevices },
+  ) => {
+    this.browser = await playwright[browser].launch();
+    this.context = await this.browser.newContext(devices[device]);
     this.page = await this.context.newPage();
   };
 

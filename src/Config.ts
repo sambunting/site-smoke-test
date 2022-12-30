@@ -1,3 +1,4 @@
+import { devices } from 'playwright';
 import Test from './Test';
 
 type Reporters = ('console' | 'junit')[];
@@ -15,6 +16,16 @@ interface Options {
    * Boolean to disable writing to the console. Useful for unit testing.
    */
   silent: boolean;
+  /**
+   * The name of the playwright browser to use
+   */
+  browser: 'chromium' | 'firefox';
+  /**
+   * The name of the device to run against
+   *
+   * A full list of devices is available at https://github.com/microsoft/playwright/blob/main/packages/playwright-core/src/server/deviceDescriptorsSource.json
+   */
+  device: keyof typeof devices;
   /**
    * Method called before all tests are run.
    */
@@ -54,6 +65,16 @@ class Config {
   public silent = false;
 
   /**
+   * The name of the playwright browser to use
+   */
+  public browser: AppOptions['browser'];
+
+  /**
+   * The name of the device to test on
+   */
+  public device: AppOptions['device'];
+
+  /**
    * The raw option configuration
    */
   private raw: AllOptions;
@@ -65,6 +86,8 @@ class Config {
 
     this.silent = options.silent || false;
     this.reporters = options.reporters || ['console'];
+    this.browser = options.browser || 'chromium';
+    this.device = options.device || 'Desktop Chrome';
   }
 
   beforeAll(tests: Test[]) {

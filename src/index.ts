@@ -83,7 +83,11 @@ class App {
     if (!this.config.silent) console.log('Starting testing environment...');
 
     // Launch/initialise playwright
-    await this.playwright.init();
+    if (!this.config.silent) console.log(`Launching ${this.config.browser} on ${this.config.device}`);
+    await this.playwright.init({
+      browser: this.config.browser!,
+      device: this.config.device!,
+    });
 
     // Initialise tests
     this.initTests();
