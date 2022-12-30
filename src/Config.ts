@@ -42,6 +42,10 @@ interface Options {
    * Method called when a test for a page has been completed
    */
   afterPage: (test: Test) => void;
+  /**
+   * Method called to modify the Playwright page.
+   */
+  pageConfig: (playwrightPage: any) => void;
 }
 
 type AllOptions = RequiredOptions & Partial<Options>;
@@ -111,6 +115,12 @@ class Config {
   afterPage(test: Test) {
     if (this.raw.afterPage) {
       this.raw.afterPage(test);
+    }
+  }
+
+  pageConfig(playwrightPage: any) {
+    if (this.raw.pageConfig) {
+      this.raw.pageConfig(playwrightPage);
     }
   }
 }

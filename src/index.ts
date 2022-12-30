@@ -44,6 +44,8 @@ class App {
           text: msg.message,
         });
       });
+
+      this.config.pageConfig(this.playwright.page);
     }
 
     // eslint-disable-next-line no-restricted-syntax
