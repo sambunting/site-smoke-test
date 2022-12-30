@@ -23,6 +23,15 @@ import { ReporterList } from '../src/report/Factory';
           description: 'The url to the sitemap of the website',
           demandOption: !config,
         })
+        .option('browser', {
+          description: 'The browser to view the site in',
+          default: 'chromium',
+          choices: ['chromium', 'firefox', 'webkit'],
+        })
+        .option('device', {
+          description: 'The device to emulate when running the tool',
+          default: 'Desktop Chrome',
+        })
         .option('reporters', {
           description: 'Array of reporters to generate the results from',
           type: 'array',

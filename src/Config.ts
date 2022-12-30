@@ -1,3 +1,4 @@
+import { devices } from 'playwright';
 import Test from './Test';
 
 type Reporters = ('console' | 'junit')[];
@@ -16,6 +17,16 @@ interface Options {
    */
   silent: boolean;
   /**
+   * The name of the playwright browser to use
+   */
+  browser: 'chromium' | 'firefox';
+  /**
+   * The name of the device to run against
+   *
+   * A full list of devices is available at https://github.com/microsoft/playwright/blob/main/packages/playwright-core/src/server/deviceDescriptorsSource.json
+   */
+  device: keyof typeof devices;
+  /**
    * Method called before all tests are run.
    */
   beforeAll: (tests: Test[]) => void;
@@ -31,6 +42,10 @@ interface Options {
    * Method called when a test for a page has been completed
    */
   afterPage: (test: Test) => void;
+  /**
+   * Method called to modify the Playwright page.
+   */
+  pageConfig: (playwrightPage: any) => void;
 }
 
 type AllOptions = RequiredOptions & Partial<Options>;
@@ -54,6 +69,16 @@ class Config {
   public silent = false;
 
   /**
+   * The name of the playwright browser to use
+   */
+  public browser: AppOptions['browser'];
+
+  /**
+   * The name of the device to test on
+   */
+  public device: AppOptions['device'];
+
+  /**
    * The raw option configuration
    */
   private raw: AllOptions;
@@ -65,6 +90,8 @@ class Config {
 
     this.silent = options.silent || false;
     this.reporters = options.reporters || ['console'];
+    this.browser = options.browser || 'chromium';
+    this.device = options.device || 'Desktop Chrome';
   }
 
   beforeAll(tests: Test[]) {
@@ -88,6 +115,12 @@ class Config {
   afterPage(test: Test) {
     if (this.raw.afterPage) {
       this.raw.afterPage(test);
+    }
+  }
+
+  pageConfig(playwrightPage: any) {
+    if (this.raw.pageConfig) {
+      this.raw.pageConfig(playwrightPage);
     }
   }
 }

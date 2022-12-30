@@ -1,14 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import App from '../src/index';
 
-const testSitemap = 'https://dazzling-sherbet-63f829.netlify.app/sitemap.xml';
-const totalURLCount = 2;
-
-const defaultConfig = {
-  sitemapURL: testSitemap,
-  silent: true,
-  reporters: [],
-};
+import { defaultConfig, totalURLCount } from './utils';
 
 describe('Application', () => {
   it('should not throw any errors', () => {

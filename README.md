@@ -90,6 +90,6 @@ module.exports = {
 There are a few things I'd like to do before I fully release the project - these include:
 
 - [x] - Additional Reporters
-- [ ] - Playwright customisation
+- [x] - Playwright customisation
 - [ ] - Plugin/Extension support
-- [ ] - Add unit tests for the tool
+- [x] - Add unit tests for the tool

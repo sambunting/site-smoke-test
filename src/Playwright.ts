@@ -1,5 +1,9 @@
 import playwright, { devices } from 'playwright';
 
+type PlaywrightBrowsers = 'chromium' | 'firefox' | 'webkit';
+
+type PlaywrightDevices = keyof typeof devices;
+
 /**
  * Class to manage the Playwright instance
  */
@@ -13,9 +17,21 @@ class Playwright {
   /**
    * Initialise Playwright launch Chrome, apply desktop context and launch a new page
    */
-  init = async () => {
-    this.browser = await playwright.chromium.launch();
-    this.context = await this.browser.newContext(devices['Desktop Chrome']);
+  init = async (
+    { browser, device } : { browser: PlaywrightBrowsers, device: PlaywrightDevices },
+  ) => {
+    // Check to see if the browser exists
+    if (!Object.keys(playwright).includes(browser as string)) {
+      throw new Error(`Browser '${browser}' is not a valid browser. Define a browser such as 'chromium', 'firefox' or 'webkit'`);
+    }
+
+    // Check to see if the device exists
+    if (!Object.keys(devices).includes(device as string)) {
+      throw new Error(`Device '${device}' is not a valid device. For a full list of devices - see https://github.com/microsoft/playwright/blob/main/packages/playwright-core/src/server/deviceDescriptorsSource.json`);
+    }
+
+    this.browser = await playwright[browser].launch();
+    this.context = await this.browser.newContext(devices[device]);
     this.page = await this.context.newPage();
   };
 
