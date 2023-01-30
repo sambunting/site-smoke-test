@@ -12,16 +12,16 @@ import { ReporterList } from '../src/report/Factory';
   // Using 'cosmiconfig' due to issues loading Javascript files on Windows.
   const { config } = await cosmiconfig('site-smoke-test').search(process.cwd()) || {};
 
-  // The sitemapURL is required if the config doesn't exist - or the value isn't in the config
-  const sitemapPositional = config?.sitemapURL ? '[sitemapURL]' : '<sitemapURL>';
-
   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   yargs(hideBin(process.argv))
-    .command(`$0 ${sitemapPositional}`, 'Run the application', (builder) => {
+    .command('$0 [sitemapURL]', 'Run the application', (builder) => {
       builder
         .positional('sitemapURL', {
           description: 'The url to the sitemap of the website',
-          demandOption: !config,
+        })
+        .option('urls', {
+          description: 'List of urls to test',
+          type: 'array',
         })
         .option('browser', {
           description: 'The browser to view the site in',

@@ -79,7 +79,11 @@ class App {
    * tests, shutdown playwright and then run the reports
    */
   public init = async () => {
-    this.urls = (await getURLs(this.config.sitemapURL));
+    if (this.config.sitemapURL.length !== 0) {
+      this.urls = await getURLs(this.config.sitemapURL);
+    } else {
+      this.urls = this.config.urls;
+    }
 
     if (!this.config.silent) console.log(`Found a total of ${this.urls.length} urls`);
     if (!this.config.silent) console.log('Starting testing environment...');
