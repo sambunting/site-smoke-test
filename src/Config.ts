@@ -3,11 +3,15 @@ import Test from './Test';
 
 type Reporters = ('console' | 'junit')[];
 
-interface RequiredOptions {
-  sitemapURL: string;
-}
-
 interface Options {
+  /**
+   * The URL to the website's sitemap.xml file
+   */
+  sitemapURL: string;
+  /**
+   * Array of URLs to test
+   */
+  urls: string[];
   /**
    * Array of reporters to generate reports
    */
@@ -48,7 +52,7 @@ interface Options {
   pageConfig: (playwrightPage: any) => void;
 }
 
-type AllOptions = RequiredOptions & Partial<Options>;
+type AllOptions = Partial<Options>;
 
 export type AppOptions = AllOptions;
 
@@ -57,6 +61,11 @@ class Config {
    * The URL to the website's sitemap.xml file
    */
   public sitemapURL: string;
+
+  /**
+   * Array of URLs to test
+   */
+  public urls: string[];
 
   /**
    * Array of report formats
@@ -86,7 +95,8 @@ class Config {
   constructor(options: AllOptions) {
     this.raw = options;
 
-    this.sitemapURL = options.sitemapURL;
+    this.sitemapURL = options.sitemapURL || '';
+    this.urls = options.urls || [];
 
     this.silent = options.silent || false;
     this.reporters = options.reporters || ['console'];

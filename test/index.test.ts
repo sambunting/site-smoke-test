@@ -16,4 +16,20 @@ describe('Application', () => {
 
     expect(actual.results.length).to.equal(totalURLCount);
   });
+
+  it('should test the correct number of urls when using the urls flag', async () => {
+    const config = {
+      ...defaultConfig,
+      urls: [
+        'http://unit.test/success',
+        'http://unit.test/console-error',
+      ],
+    } as any;
+    delete config.sitemapURL;
+
+    const actual = new App(config);
+    await actual.init();
+
+    expect(actual.results.length).to.equal(2);
+  });
 });

@@ -14,10 +14,16 @@ Then, once installed - run `site-smoke-test` to see all available options.
 
 ## Basic Usage
 
-To use the tool, pass through the URL to your site's sitemap.
+To use the tool, pass through the URL to your website. You can also pass through a direct URL to your `sitemap.xml` file.
 
 ```sh
-site-smoke-test https://your-website.com/sitemap.xml
+site-smoke-test https://your-website.com
+```
+
+Alternatively, you can use the `--urls` flag to define a series of URLs.
+
+```sh
+site-smoke-test --urls https://example.com https://example.com/test
 ```
 
 ## Advanced Usage
@@ -47,7 +53,7 @@ These hooks are called at specific times while the tool is running. In order for
 
 ```js
 module.exports = {
-  sitemapURL: 'https://dazzling-sherbet-63f829.netlify.app/sitemap.xml',
+  sitemapURL: 'https://your-website.com/sitemap.xml',
 
   beforeAll: (tests) => {
     // Before all of the tests are ran, log out the test object
@@ -62,10 +68,10 @@ The `beforeAll` hook is called before all of the tests are ran.
 ##### afterAll(tests: Tests[])
 The `afterAll` hook is called after all of the tests are ran.
 
-##### beforePage(tests: Test)
+##### beforePage(test: Test)
 The `beforePage` hook is called before a test is ran.
 
-##### afterPage(tests: Test)
+##### afterPage(test: Test)
 The `afterPage` hook is called after a test is ran.
 
 You can also do things like modify the result of the test if required.
