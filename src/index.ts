@@ -4,6 +4,7 @@ import Test from './Test';
 import Playwright from './Playwright';
 import ReportFactory from './report/Factory';
 import Config, { AppOptions } from './Config';
+import Logger, { consoleTransport } from './Logger';
 
 class App {
   public results: Test[] = [];
@@ -18,6 +19,12 @@ class App {
 
   constructor(options: AppOptions) {
     this.config = new Config(options);
+
+    // If the `silent` property isn't true in the config, enable console logging by adding the
+    // console transport to the logger.
+    if (!this.config.silent) {
+      Logger.add(consoleTransport);
+    }
   }
 
   /**
@@ -52,7 +59,7 @@ class App {
     for (const test of tests) {
       this.config.beforePage(test);
 
-      if (!this.config.silent) console.log('Testing page', test.url);
+      Logger.log('info', `Testing page ${test.url}`);
 
       currentTest = test;
 
@@ -85,11 +92,11 @@ class App {
       this.urls = this.config.urls;
     }
 
-    if (!this.config.silent) console.log(`Found a total of ${this.urls.length} urls`);
-    if (!this.config.silent) console.log('Starting testing environment...');
+    Logger.info(`Found a total of ${this.urls.length} urls`);
+    Logger.info('Starting testing environment...');
 
     // Launch/initialise playwright
-    if (!this.config.silent) console.log(`Launching ${this.config.browser} on ${this.config.device}`);
+    Logger.info(`Launching ${this.config.browser} on ${this.config.device}`);
     await this.playwright.init({
       browser: this.config.browser!,
       device: this.config.device!,
@@ -106,7 +113,7 @@ class App {
     this.config.afterAll(this.tests);
 
     // Once all Tests have been ran - shutdown playwright
-    if (!this.config.silent) console.log('Testing complete, beginning teardown...');
+    Logger.info('Testing complete, beginning teardown...');
     await this.playwright.shutdown();
 
     this.config.reporters.forEach((reporter) => {

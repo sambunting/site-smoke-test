@@ -37,6 +37,7 @@
     "cosmiconfig": "^7.0.1",
     "fast-xml-parser": "^4.0.10",
     "playwright": "^1.26.0",
+    "winston": "^3.8.2",
     "yargs": "^17.5.1"
   }
 }
