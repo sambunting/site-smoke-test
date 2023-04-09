@@ -33,44 +33,24 @@ class App {
    * @param tests Array of empty/new tests
    */
   run = async (tests: Test[]) => {
-    let currentTest: Test | null = null;
-
-    if (this.playwright && this.playwright.page) {
-      // Handler for if `console.error` is used
-      await this.playwright.page.on('console', (msg) => {
-        if (msg.type() === 'error') {
-          currentTest?.addError({
-            text: msg.text(),
-          });
-        }
-      });
-
-      // Handler for if there is an uncaught error
-      await this.playwright.page.on('pageerror', (msg) => {
-        currentTest?.addError({
-          text: msg.message,
-        });
-      });
-
-      this.config.pageConfig(this.playwright.page);
-    }
-
     // eslint-disable-next-line no-restricted-syntax
     for (const test of tests) {
       this.config.beforePage(test);
 
       Logger.log('info', `Testing page ${test.url}`);
 
-      currentTest = test;
+      // await this.playwright.goToPage(test.url);
 
       // eslint-disable-next-line no-await-in-loop
-      await this.playwright.goToPage(test.url);
+      await this.playwright.loadTest(test, (page) => {
+        this.config.pageConfig(page);
+      });
 
-      currentTest.complete();
+      test.complete();
 
       this.config.afterPage(test);
 
-      this.results.push(currentTest);
+      this.results.push(test);
     }
   };
 
@@ -82,15 +62,32 @@ class App {
   };
 
   /**
-   * Initialise the tool, get the URLs from the sitemap file, launch Playwright, run all of the
-   * tests, shutdown playwright and then run the reports
+   * Set the `urls` property
    */
-  public init = async () => {
+  private setUrls = async () => {
     if (this.config.sitemapURL.length !== 0) {
       this.urls = await getURLs(this.config.sitemapURL);
     } else {
       this.urls = this.config.urls;
     }
+  };
+
+  /**
+   * Generate reports from the application running.
+   */
+  private generateReports = () => {
+    this.config.reporters.forEach((reporter) => {
+      const report = ReportFactory(reporter, this.results);
+      report.execute();
+    });
+  };
+
+  /**
+   * Initialise the tool, get the URLs from the sitemap file, launch Playwright, run all of the
+   * tests, shutdown playwright and then run the reports
+   */
+  public init = async () => {
+    await this.setUrls();
 
     Logger.info(`Found a total of ${this.urls.length} urls`);
     Logger.info('Starting testing environment...');
@@ -116,10 +113,7 @@ class App {
     Logger.info('Testing complete, beginning teardown...');
     await this.playwright.shutdown();
 
-    this.config.reporters.forEach((reporter) => {
-      const report = ReportFactory(reporter, this.results);
-      report.execute();
-    });
+    this.generateReports();
 
     // If any of the tests have failed, exit the tool with the 1 exit code, this is so it can be
     // caught by CI processes

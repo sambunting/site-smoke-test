@@ -1,4 +1,5 @@
-import playwright, { devices } from 'playwright';
+import playwright, { Page, devices } from 'playwright';
+import Test from './Test';
 
 type PlaywrightBrowsers = 'chromium' | 'firefox' | 'webkit';
 
@@ -12,7 +13,7 @@ class Playwright {
 
   private context: playwright.BrowserContext | null = null;
 
-  public page: playwright.Page | null = null;
+  public page: playwright.Page | null | undefined = null;
 
   /**
    * Initialise Playwright launch Chrome, apply desktop context and launch a new page
@@ -47,6 +48,37 @@ class Playwright {
     } else {
       throw new Error('Playwright has not been initialised by site-smoke-test.');
     }
+  };
+
+  /**
+   * Load/initialise a test for playwright to test
+   *
+   * @param test The test for playwright to load
+   * @param callback Method to call to load additional options
+   */
+  loadTest = async (test: Test, callback: (page: Page) => void) => {
+    this.page = await this.context?.newPage();
+
+    // Handler for if `console.error` is used
+    await this.page?.on('console', (msg) => {
+      if (msg.type() === 'error') {
+        test?.addError({
+          text: msg.text(),
+        });
+      }
+    });
+
+    // Handler for if there is an uncaught error
+    await this.page?.on('pageerror', (msg) => {
+      test?.addError({
+        text: msg.message,
+      });
+    });
+
+    await callback(this.page!);
+
+    await this.page?.goto(test.url);
+    await this.page?.waitForLoadState('load');
   };
 
   /**
