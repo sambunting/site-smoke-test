@@ -1,6 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 import { beforeAll } from 'vitest';
 import nock from 'nock';
+import { Page } from 'playwright';
 
 const testSitemap = 'http://unit.test/sitemap.xml';
 export const totalURLCount = 2;
@@ -9,8 +10,8 @@ export const defaultConfig = {
   sitemapURL: testSitemap,
   silent: true,
   reporters: [],
-  pageConfig: ((page: any) => {
-    page.route('**/*', (route: any) => {
+  pageConfig: ((page: Page) => {
+    page.route('**/*', (route) => {
       // Based off the url, decide what should be returned/mocked.
 
       switch (route.request().url()) {

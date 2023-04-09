@@ -1,6 +1,26 @@
 import Test from '../../Test';
 import BaseReport from '../BaseReport';
 
+interface TestCaseError {
+  '@@message': string,
+  '#text': string,
+}
+
+interface TestCase {
+  '@@name': string,
+  '@@classname': string,
+  error?: TestCaseError,
+}
+
+interface TestSuite {
+  testsuite: {
+    '@@name': string,
+    '@@tests': number,
+    '@@failures': number,
+    testcase: TestCase[],
+  }
+}
+
 class JUnitReport extends BaseReport {
   constructor(data: Test[]) {
     super('junit', data);
@@ -14,7 +34,7 @@ class JUnitReport extends BaseReport {
    * Using the test data, create an XML structure which matches a JUnit report file
    */
   generate() {
-    const returnValue: any = {
+    const returnValue: TestSuite = {
       testsuite: {
         '@@name': 'Site Smoke Test',
         '@@tests': this.data.length,
@@ -24,7 +44,7 @@ class JUnitReport extends BaseReport {
     };
 
     this.data.forEach((test) => {
-      const testObject: any = {
+      const testObject: TestCase = {
         '@@name': test.url,
         '@@classname': test.url,
       };

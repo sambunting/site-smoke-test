@@ -38,7 +38,7 @@ import { ReporterList } from '../src/report/Factory';
           default: ['console'],
           choices: ReporterList,
         });
-    }, (args: any) => {
+    }, (args) => {
       // Merge together configurations so the CLI arguments would overwrite the config.
       const finalConfig = { ...config, ...args };
 

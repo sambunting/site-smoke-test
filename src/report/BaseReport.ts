@@ -58,12 +58,11 @@ abstract class BaseReport implements IBaseReport {
    * @param data Javascript object to convert to an XML file
    * @param filePath The path and name of the file to export the content to.
    */
-  toXMLFile(data: any, filePath: any) {
+  toXMLFile(data: object | object[], filePath: string) {
     const builder = new XMLBuilder({ ignoreAttributes: false, format: true, attributeNamePrefix: '@@' });
     const XMLData = builder.build(data);
 
     fs.writeFileSync(filePath, XMLData);
-    // console.log(sampleXMLData);
   }
 
   /**

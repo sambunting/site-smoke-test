@@ -2,12 +2,14 @@ import Test from '../Test';
 import ConsoleReport from './reporters/Console';
 import JUnitReport from './reporters/JUnit';
 
-const reporters: { [ key: string]: any } = {
+const reportMap = {
   console: ConsoleReport,
   junit: JUnitReport,
 };
 
-export const ReporterList = Object.keys(reporters);
+type Keys = keyof typeof reportMap;
+
+export const ReporterList = Object.keys(reportMap);
 
 /**
  * Get a reporter instance by it's name
@@ -16,6 +18,6 @@ export const ReporterList = Object.keys(reporters);
  * @param data Test results
  * @returns Reporter instance
  */
-const ReportFactory = (name: string, data: Test[]) => new reporters[name](data);
+const ReportFactory = (name: Keys, data: Test[]) => new reportMap[name](data);
 
 export default ReportFactory;

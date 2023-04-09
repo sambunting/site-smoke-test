@@ -1,4 +1,4 @@
-import { devices } from 'playwright';
+import { Page, devices } from 'playwright';
 import Test from './Test';
 
 type Reporters = ('console' | 'junit')[];
@@ -49,7 +49,7 @@ interface Options {
   /**
    * Method called to modify the Playwright page.
    */
-  pageConfig: (playwrightPage: any) => void;
+  pageConfig: (playwrightPage: Page) => void;
 }
 
 type AllOptions = Partial<Options>;
@@ -128,7 +128,7 @@ class Config {
     }
   }
 
-  pageConfig(playwrightPage: any) {
+  pageConfig(playwrightPage: Page) {
     if (this.raw.pageConfig) {
       this.raw.pageConfig(playwrightPage);
     }
