@@ -56,37 +56,10 @@ type AllOptions = Partial<Options>;
 
 export type AppOptions = AllOptions;
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface Config extends Options {}
+
 class Config {
-  /**
-   * The URL to the website's sitemap.xml file
-   */
-  public sitemapURL: string;
-
-  /**
-   * Array of URLs to test
-   */
-  public urls: string[];
-
-  /**
-   * Array of report formats
-   */
-  public reporters: Reporters;
-
-  /**
-   * Set to true if nothing should be outputted to the console, useful for unit-testing.
-   */
-  public silent = false;
-
-  /**
-   * The name of the playwright browser to use
-   */
-  public browser: AppOptions['browser'];
-
-  /**
-   * The name of the device to test on
-   */
-  public device: AppOptions['device'];
-
   /**
    * The raw option configuration
    */
