@@ -53,7 +53,12 @@ const getSitemapFile = async (url: string, index = 0): Promise<Sitemap> => {
 
     return parsed;
   } catch (error) {
-    if ((error as Error).message === `URL ${paths[index]} is not a valid sitemap.`) {
+    // If the error contains any of these messages, handle them by effectively ignoring them and
+    // getting the next potential sitemap file.
+    if ([
+      `URL ${paths[index]} is not a valid sitemap.`,
+      'Request failed with status code 404',
+    ].includes((error as Error).message)) {
       return getSitemapFile(url, index + 1);
     }
 

@@ -64,6 +64,14 @@ describe('Urls', () => {
       await expect(async () => URLs('invalid url')).rejects.toThrow();
     });
 
+    it('should handle an error if the sitemap request is a 404 error', async () => {
+      mockedAxios.get.mockRejectedValue(Error('Request failed with status code 404'));
+
+      await expect(async () => URLs('http://unit.test')).rejects.toThrow('Unable to retrieve sitemap');
+
+      expect(mockedAxios.get).toBeCalledTimes(6);
+    });
+
     it('should be able to parse a sitemap with only one url in it', async () => {
       mockedAxios.get.mockResolvedValue({
         data: `
