@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { XMLParser } from 'fast-xml-parser';
-import type Sitemap from './types/Sitemap';
+import type Sitemap from '../types/Sitemap';
 
 /**
  * Parse an XML string to return a Javascript object
@@ -37,18 +37,27 @@ const getSitemapFile = async (url: string, index = 0): Promise<Sitemap> => {
   }
 
   try {
-    const data = await axios(paths[index]);
-
+    const data = await axios.get(paths[index]);
     const parsed = parseXMLString(data.data);
 
     // Check that it has a urlset, if it doesn't move onto the next url by throwing an error
-    if (!parsed.urlset) {
+    if (!parsed.urlset && !parsed.sitemapindex) {
       throw new Error(`URL ${paths[index]} is not a valid sitemap.`);
+    }
+
+    // If the sitemap only has one URL, it will appear as an object in the parsed value - set it to
+    // an array
+    if (parsed.urlset && !Array.isArray(parsed.urlset.url)) {
+      parsed.urlset.url = [parsed.urlset.url];
     }
 
     return parsed;
   } catch (error) {
-    return getSitemapFile(url, index + 1);
+    if ((error as Error).message === `URL ${paths[index]} is not a valid sitemap.`) {
+      return getSitemapFile(url, index + 1);
+    }
+
+    throw error;
   }
 };
 
