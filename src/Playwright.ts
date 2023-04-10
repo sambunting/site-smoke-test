@@ -37,20 +37,6 @@ class Playwright {
   };
 
   /**
-   * Go to a page in the Playwright instance
-   *
-   * @param url The url to navigate to
-   */
-  goToPage = async (url: string) => {
-    if (this.page) {
-      await this.page.goto(url);
-      await this.page.waitForLoadState('load');
-    } else {
-      throw new Error('Playwright has not been initialised by site-smoke-test.');
-    }
-  };
-
-  /**
    * Load/initialise a test for playwright to test
    *
    * @param test The test for playwright to load

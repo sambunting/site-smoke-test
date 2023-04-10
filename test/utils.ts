@@ -4,7 +4,14 @@ import nock from 'nock';
 import { Page } from 'playwright';
 
 const testSitemap = 'http://unit.test/sitemap.xml';
-export const totalURLCount = 2;
+
+const testUrls = [
+  'http://unit.test/success',
+  'http://unit.test/console-error',
+  'http://unit.test/log-error',
+];
+
+export const totalURLCount = testUrls.length;
 
 export const defaultConfig = {
   sitemapURL: testSitemap,
@@ -21,6 +28,9 @@ export const defaultConfig = {
         case 'http://unit.test/console-error':
           route.fulfill({ status: 200, path: './test/mock-pages/console-error.html' });
           break;
+        case 'http://unit.test/log-error':
+          route.fulfill({ status: 200, path: './test/mock-pages/log-error.html' });
+          break;
         default:
           // Unsure about the path, so pass it for now.
           route.fulfill({ status: 200 });
@@ -34,12 +44,11 @@ beforeAll(() => {
   // Mock a response from a sitemap file, which we will use for unit testing.
   nock('http://unit.test/').persist().get('/sitemap.xml').reply(200, `
     <urlset>
-      <url>
-        <loc>http://unit.test/success</loc>
-      </url>
-      <url>
-        <loc>http://unit.test/console-error</loc>
-      </url>
+      ${testUrls.map((url) => `
+        <url>
+          <loc>${url}</loc>
+        </url>
+      `)}
     </urlset/>
   `);
 });
