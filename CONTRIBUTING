@@ -8,13 +8,17 @@ This guide will give you information on how you can help contribute to site-smok
 
 Before contributing, I'd like to give you some background on the tool, the purpose of it, and the overall scope of the tool.
 
-site-smoke-test is designed to quickly inform developers if a site is working correctly in a browser.
+site-smoke-test is designed to quickly inform developers if a site is working correctly in a browser. The way it works is by using [Playwright](https://playwright.dev/) to check the console output for any errors that have been thrown. If there are errors, the tool will report on them. I created the as a quick and easy way to make sure an entire site isn't throwing any errors like 404 or runtime Javascript errors.
+
+The tool is open source so that as many developers and organisations can make use of the tool as possible, as well as help improve my own skills as a programmer too!
 
 One important thing to note, is that it is not a replacement for end to end automating tools like [Cypress](https://www.cypress.io/). So testing specific functionality on specific pages isn't something site-smoke-test is designed to do, unlike tools like Cypress. You should ideally use site-smoke-test in addition to tools like Cypress, not as a replacement.
 
 ## Making changes
 
 To make changes to the project - first clone the repo, and then install all the required dependencies by running `npm install`/`npm i`. 
+
+While making changes, please ensure you are using [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/). 
 
 Once you have finished making your changes, please open a pull request.
 
