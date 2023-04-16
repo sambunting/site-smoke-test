@@ -90,7 +90,12 @@ module.exports = {
 }
 ```
 
+#### pageConfig(playwrightPage: Page)
+THe `pageConfig` hook is called once the Playwright page has been setup, and before the test is ran. This should be where you add in things like setting cookies to bypass authentication.
+
 ## Development
+
+If you would like to contribute to the project - please see [CONTRIBUTING](https://github.com/sambunting/site-smoke-test/blob/main/CONTRIBUTING).
 
 ### Todo
 There are a few things I'd like to do before I fully release the project - these include:
