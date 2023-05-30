@@ -38,7 +38,7 @@ site-smoke-test https://your-website.com/sitemap.xml --reporters console junit
 
 ### Configuration File
 
-You can use a configuration file named `site-smoke-test.config.(json|yml|js)` to include configuration for the tool.
+You can use a configuration file named `.site-smoke-testrc` to include configuration for the tool. The contents can either be JSON or YAML.
 
 ```json
 {
@@ -47,9 +47,16 @@ You can use a configuration file named `site-smoke-test.config.(json|yml|js)` to
 }
 ```
 
+```yaml
+sitemapURL: https://your-website.com/sitemap.xml
+reporters:
+  - console
+  - junit
+```
+
 #### Configuration Hooks
 
-These hooks are called at specific times while the tool is running. In order for you to use them, you need to use a `site-smoke-test.config.js` file.
+These hooks are called at specific times while the tool is running. In order for you to use them, you need to use a `site-smoke-test.config.(js|cjs)` file.
 
 ```js
 module.exports = {
